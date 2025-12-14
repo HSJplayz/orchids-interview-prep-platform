@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Flame,
   Target,
@@ -17,6 +17,8 @@ import {
   RotateCcw,
   Code2,
   Zap,
+  Award,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +48,20 @@ const topicProgress = [
   { topic: "linked-lists", solved: 15, total: 25 },
 ];
 
+const activityData = Array.from({ length: 12 }, (_, weekIndex) =>
+  Array.from({ length: 7 }, (_, dayIndex) => {
+    const rand = Math.random();
+    return rand > 0.7 ? 0 : rand > 0.4 ? Math.floor(rand * 5) + 1 : Math.floor(rand * 10) + 5;
+  })
+);
+
+const getActivityColor = (count: number) => {
+  if (count === 0) return "bg-slate-100";
+  if (count < 3) return "bg-emerald-200";
+  if (count < 7) return "bg-emerald-400";
+  return "bg-emerald-600";
+};
+
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("overview");
 
@@ -55,42 +71,49 @@ export default function DashboardPage() {
   const hardTotal = 100;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background gradient-mesh">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8"
+        >
           <div>
-            <h1 className="text-3xl font-bold mb-1">Welcome back, {user.name.split(" ")[0]}!</h1>
-            <p className="text-muted-foreground">Track your progress and keep up the momentum</p>
+            <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-indigo-600 to-emerald-600 bg-clip-text text-transparent">
+              Welcome back, {user.name.split(" ")[0]}!
+            </h1>
+            <p className="text-muted-foreground text-lg">Track your progress and keep up the momentum 🚀</p>
           </div>
           <Link href="/problems">
-            <Button className="gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90">
-              <Code2 className="h-4 w-4" />
+            <Button className="gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 shadow-lg shadow-indigo-500/30 button-ripple h-11 px-6">
+              <Code2 className="h-5 w-5" />
               Practice Now
             </Button>
           </Link>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <Card className="border-border/50">
+            <Card className="border border-slate-200/60 shadow-sm hover:shadow-md transition-all duration-200 card-hover bg-white">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2.5 rounded-xl bg-primary/10">
-                    <Target className="h-5 w-5 text-primary" />
+                  <div className="p-3 rounded-xl bg-indigo-100">
+                    <Target className="h-6 w-6 text-indigo-600" />
                   </div>
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className="text-xs font-semibold bg-indigo-50 text-indigo-700 border-indigo-200">
                     {((user.totalSolved / totalProblems) * 100).toFixed(1)}%
                   </Badge>
                 </div>
-                <div className="text-3xl font-bold mb-1">{user.totalSolved}</div>
-                <div className="text-sm text-muted-foreground">Problems Solved</div>
+                <div className="text-3xl font-bold mb-1 text-slate-900">{user.totalSolved}</div>
+                <div className="text-sm text-muted-foreground font-medium">Problems Solved</div>
                 <Progress
                   value={(user.totalSolved / totalProblems) * 100}
-                  className="mt-3 h-1.5"
+                  className="mt-4 h-2 bg-slate-100"
                 />
               </CardContent>
             </Card>
@@ -99,26 +122,29 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
           >
-            <Card className="border-border/50 bg-gradient-to-br from-amber-500/10 to-orange-500/10">
+            <Card className="border border-amber-200/60 shadow-sm hover:shadow-md transition-all duration-200 card-hover bg-gradient-to-br from-amber-50 to-orange-50">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2.5 rounded-xl bg-amber-500/20">
-                    <Flame className="h-5 w-5 text-amber-500" />
+                  <div className="p-3 rounded-xl bg-amber-100">
+                    <Flame className="h-6 w-6 text-amber-600 animate-pulse-subtle" />
                   </div>
-                  <Badge className="bg-amber-500/20 text-amber-600 dark:text-amber-400 text-xs">
-                    On Fire!
+                  <Badge className="bg-amber-100 text-amber-700 border-amber-200 text-xs font-semibold">
+                    On Fire! 🔥
                   </Badge>
                 </div>
-                <div className="text-3xl font-bold mb-1">{user.streak}</div>
-                <div className="text-sm text-muted-foreground">Day Streak</div>
-                <div className="mt-3 flex gap-1">
+                <div className="text-3xl font-bold mb-1 text-slate-900">{user.streak}</div>
+                <div className="text-sm text-muted-foreground font-medium">Day Streak</div>
+                <div className="mt-4 flex gap-1.5">
                   {[...Array(7)].map((_, i) => (
-                    <div
+                    <motion.div
                       key={i}
-                      className={`h-1.5 flex-1 rounded-full ${
-                        i < user.streak % 7 ? "bg-amber-500" : "bg-muted"
+                      initial={{ scaleY: 0 }}
+                      animate={{ scaleY: 1 }}
+                      transition={{ delay: 0.3 + i * 0.05, duration: 0.3 }}
+                      className={`h-2 flex-1 rounded-full ${
+                        i < user.streak % 7 ? "bg-amber-500" : "bg-slate-200"
                       }`}
                     />
                   ))}
@@ -130,18 +156,19 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
+            transition={{ duration: 0.3, delay: 0.3 }}
           >
-            <Card className="border-border/50">
+            <Card className="border border-slate-200/60 shadow-sm hover:shadow-md transition-all duration-200 card-hover bg-white">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2.5 rounded-xl bg-green-500/10">
-                    <TrendingUp className="h-5 w-5 text-green-500" />
+                  <div className="p-3 rounded-xl bg-emerald-100">
+                    <TrendingUp className="h-6 w-6 text-emerald-600" />
                   </div>
                 </div>
-                <div className="text-3xl font-bold mb-1">78%</div>
-                <div className="text-sm text-muted-foreground">Acceptance Rate</div>
-                <div className="mt-3 text-xs text-green-600 dark:text-green-400">
+                <div className="text-3xl font-bold mb-1 text-slate-900">78%</div>
+                <div className="text-sm text-muted-foreground font-medium">Acceptance Rate</div>
+                <div className="mt-4 text-sm text-emerald-600 font-medium flex items-center gap-1">
+                  <TrendingUp className="h-4 w-4" />
                   +5% from last week
                 </div>
               </CardContent>
@@ -151,18 +178,19 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.3 }}
+            transition={{ duration: 0.3, delay: 0.4 }}
           >
-            <Card className="border-border/50">
+            <Card className="border border-slate-200/60 shadow-sm hover:shadow-md transition-all duration-200 card-hover bg-white">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2.5 rounded-xl bg-purple-500/10">
-                    <Trophy className="h-5 w-5 text-purple-500" />
+                  <div className="p-3 rounded-xl bg-purple-100">
+                    <Trophy className="h-6 w-6 text-purple-600" />
                   </div>
                 </div>
-                <div className="text-3xl font-bold mb-1">#42</div>
-                <div className="text-sm text-muted-foreground">Global Ranking</div>
-                <div className="mt-3 text-xs text-purple-600 dark:text-purple-400">
+                <div className="text-3xl font-bold mb-1 text-slate-900">#42</div>
+                <div className="text-sm text-muted-foreground font-medium">Global Ranking</div>
+                <div className="mt-4 text-sm text-purple-600 font-medium flex items-center gap-1">
+                  <Award className="h-4 w-4" />
                   Top 5% of users
                 </div>
               </CardContent>
@@ -174,62 +202,92 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.4 }}
+            transition={{ duration: 0.3, delay: 0.5 }}
             className="lg:col-span-2"
           >
-            <Card className="border-border/50">
-              <CardHeader>
-                <CardTitle className="text-lg">Progress by Difficulty</CardTitle>
+            <Card className="border border-slate-200/60 shadow-sm bg-white">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg font-semibold text-slate-900">Progress by Difficulty</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-6">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <div className="h-3 w-3 rounded-full bg-green-500" />
-                        <span className="text-sm font-medium">Easy</span>
+                <div className="space-y-7">
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="h-4 w-4 rounded-full bg-emerald-500" />
+                        <span className="text-sm font-semibold text-slate-900">Easy</span>
                       </div>
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-sm font-medium text-slate-600">
                         {user.easySolved} / {easyTotal}
                       </span>
                     </div>
-                    <Progress
-                      value={(user.easySolved / easyTotal) * 100}
-                      className="h-2 bg-green-500/20"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <div className="h-3 w-3 rounded-full bg-amber-500" />
-                        <span className="text-sm font-medium">Medium</span>
+                    <div className="relative">
+                      <div className="h-3 w-full rounded-full bg-emerald-100 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(user.easySolved / easyTotal) * 100}%` }}
+                          transition={{ delay: 0.7, duration: 0.8, ease: "easeOut" }}
+                          className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full"
+                        />
                       </div>
-                      <span className="text-sm text-muted-foreground">
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.7 }}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="h-4 w-4 rounded-full bg-amber-500" />
+                        <span className="text-sm font-semibold text-slate-900">Medium</span>
+                      </div>
+                      <span className="text-sm font-medium text-slate-600">
                         {user.mediumSolved} / {mediumTotal}
                       </span>
                     </div>
-                    <Progress
-                      value={(user.mediumSolved / mediumTotal) * 100}
-                      className="h-2 bg-amber-500/20"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <div className="h-3 w-3 rounded-full bg-red-500" />
-                        <span className="text-sm font-medium">Hard</span>
+                    <div className="relative">
+                      <div className="h-3 w-full rounded-full bg-amber-100 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(user.mediumSolved / mediumTotal) * 100}%` }}
+                          transition={{ delay: 0.8, duration: 0.8, ease: "easeOut" }}
+                          className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full"
+                        />
                       </div>
-                      <span className="text-sm text-muted-foreground">
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.8 }}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="h-4 w-4 rounded-full bg-red-500" />
+                        <span className="text-sm font-semibold text-slate-900">Hard</span>
+                      </div>
+                      <span className="text-sm font-medium text-slate-600">
                         {user.hardSolved} / {hardTotal}
                       </span>
                     </div>
-                    <Progress
-                      value={(user.hardSolved / hardTotal) * 100}
-                      className="h-2 bg-red-500/20"
-                    />
-                  </div>
+                    <div className="relative">
+                      <div className="h-3 w-full rounded-full bg-red-100 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(user.hardSolved / hardTotal) * 100}%` }}
+                          transition={{ delay: 0.9, duration: 0.8, ease: "easeOut" }}
+                          className="h-full bg-gradient-to-r from-red-500 to-red-400 rounded-full"
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
                 </div>
               </CardContent>
             </Card>
@@ -238,16 +296,16 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.5 }}
+            transition={{ duration: 0.3, delay: 0.6 }}
           >
-            <Card className="border-border/50 bg-gradient-to-br from-primary/5 to-accent/5">
-              <CardHeader>
+            <Card className="border border-indigo-200/60 shadow-sm bg-gradient-to-br from-indigo-50 via-white to-emerald-50">
+              <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Zap className="h-5 w-5 text-primary" />
+                  <CardTitle className="text-lg flex items-center gap-2 font-semibold text-slate-900">
+                    <Zap className="h-5 w-5 text-indigo-600" />
                     Daily Challenge
                   </CardTitle>
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="outline" className="text-xs font-medium border-indigo-200 text-indigo-700">
                     {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                   </Badge>
                 </div>
@@ -258,33 +316,33 @@ export default function DashboardPage() {
                     <div>
                       <Link
                         href={`/problems/${mockDailyChallenge.problem.slug}`}
-                        className="font-medium hover:text-primary transition-colors"
+                        className="font-semibold text-slate-900 hover:text-indigo-600 transition-colors"
                       >
                         {mockDailyChallenge.problem.title}
                       </Link>
-                      <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center gap-2 mt-3">
                         <Badge
                           variant="secondary"
-                          className={`text-xs ${
+                          className={`text-xs font-medium ${
                             mockDailyChallenge.problem.difficulty === "easy"
-                              ? "bg-difficulty-easy text-green-600 dark:text-green-400"
+                              ? "bg-emerald-100 text-emerald-700 border-emerald-200"
                               : mockDailyChallenge.problem.difficulty === "medium"
-                              ? "bg-difficulty-medium text-amber-600 dark:text-amber-400"
-                              : "bg-difficulty-hard text-red-600 dark:text-red-400"
+                              ? "bg-amber-100 text-amber-700 border-amber-200"
+                              : "bg-red-100 text-red-700 border-red-200"
                           }`}
                         >
                           {mockDailyChallenge.problem.difficulty.charAt(0).toUpperCase() +
                             mockDailyChallenge.problem.difficulty.slice(1)}
                         </Badge>
                         {mockDailyChallenge.problem.topics.slice(0, 1).map((topic) => (
-                          <Badge key={topic} variant="outline" className="text-xs">
+                          <Badge key={topic} variant="outline" className="text-xs font-medium border-slate-200">
                             {topicLabels[topic]}
                           </Badge>
                         ))}
                       </div>
                     </div>
                     <Link href={`/problems/${mockDailyChallenge.problem.slug}`}>
-                      <Button className="w-full gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90">
+                      <Button className="w-full gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 shadow-lg shadow-indigo-500/20 button-ripple">
                         Solve Challenge
                         <ArrowRight className="h-4 w-4" />
                       </Button>
@@ -296,31 +354,92 @@ export default function DashboardPage() {
           </motion.div>
         </div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.7 }}
+          className="mb-8"
+        >
+          <Card className="border border-slate-200/60 shadow-sm bg-white">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-indigo-600" />
+                Activity Heatmap
+              </CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">Your coding activity over the past 12 weeks</p>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto pb-2">
+                <div className="inline-flex flex-col gap-1.5">
+                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, dayIndex) => (
+                    <div key={day} className="flex items-center gap-1.5">
+                      <span className="text-xs text-muted-foreground w-8">{day}</span>
+                      <div className="flex gap-1.5">
+                        {activityData.map((week, weekIndex) => (
+                          <motion.div
+                            key={`${weekIndex}-${dayIndex}`}
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.8 + (weekIndex * 7 + dayIndex) * 0.01 }}
+                            className={`w-3 h-3 rounded-sm ${getActivityColor(
+                              week[dayIndex]
+                            )} hover:ring-2 hover:ring-indigo-300 transition-all cursor-pointer`}
+                            title={`${week[dayIndex]} problems solved`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center gap-3 mt-6 text-xs text-muted-foreground">
+                <span>Less</span>
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-sm bg-slate-100" />
+                  <div className="w-3 h-3 rounded-sm bg-emerald-200" />
+                  <div className="w-3 h-3 rounded-sm bg-emerald-400" />
+                  <div className="w-3 h-3 rounded-sm bg-emerald-600" />
+                </div>
+                <span>More</span>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.6 }}
+            transition={{ duration: 0.3, delay: 0.8 }}
           >
-            <Card className="border-border/50">
-              <CardHeader>
-                <CardTitle className="text-lg">Topic Progress</CardTitle>
+            <Card className="border border-slate-200/60 shadow-sm bg-white">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg font-semibold text-slate-900">Topic Progress</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {topicProgress.map((item) => (
-                    <div key={item.topic}>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-sm font-medium">{topicLabels[item.topic]}</span>
-                        <span className="text-xs text-muted-foreground">
+                <div className="space-y-5">
+                  {topicProgress.map((item, index) => (
+                    <motion.div
+                      key={item.topic}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.9 + index * 0.05 }}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-slate-700">{topicLabels[item.topic]}</span>
+                        <span className="text-xs text-muted-foreground font-medium">
                           {item.solved} / {item.total}
                         </span>
                       </div>
-                      <Progress
-                        value={(item.solved / item.total) * 100}
-                        className="h-1.5"
-                      />
-                    </div>
+                      <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(item.solved / item.total) * 100}%` }}
+                          transition={{ delay: 1 + index * 0.05, duration: 0.6, ease: "easeOut" }}
+                          className="h-full bg-gradient-to-r from-indigo-500 to-indigo-400 rounded-full"
+                        />
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
               </CardContent>
@@ -330,50 +449,58 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.7 }}
+            transition={{ duration: 0.3, delay: 0.9 }}
           >
-            <Card className="border-border/50">
-              <CardHeader>
+            <Card className="border border-slate-200/60 shadow-sm bg-white">
+              <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">Recent Activity</CardTitle>
-                  <Button variant="ghost" size="sm" className="text-xs">
+                  <CardTitle className="text-lg font-semibold text-slate-900">Recent Activity</CardTitle>
+                  <Button variant="ghost" size="sm" className="text-xs hover:text-indigo-600">
                     View All
                   </Button>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {recentActivity.map((activity, index) => (
-                    <Link
+                    <motion.div
                       key={index}
-                      href={`/problems/${activity.problem.slug}`}
-                      className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1 + index * 0.05 }}
                     >
-                      <div className="flex items-center gap-3">
-                        {activity.status === "solved" ? (
-                          <CheckCircle2 className="h-5 w-5 text-green-500" />
-                        ) : (
-                          <Circle className="h-5 w-5 text-amber-500" />
-                        )}
-                        <div>
-                          <div className="font-medium text-sm">{activity.problem.title}</div>
-                          <div className="text-xs text-muted-foreground">{activity.date}</div>
-                        </div>
-                      </div>
-                      <Badge
-                        variant="secondary"
-                        className={`text-xs ${
-                          activity.problem.difficulty === "easy"
-                            ? "bg-difficulty-easy text-green-600 dark:text-green-400"
-                            : activity.problem.difficulty === "medium"
-                            ? "bg-difficulty-medium text-amber-600 dark:text-amber-400"
-                            : "bg-difficulty-hard text-red-600 dark:text-red-400"
-                        }`}
+                      <Link
+                        href={`/problems/${activity.problem.slug}`}
+                        className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-all duration-150 group"
                       >
-                        {activity.problem.difficulty.charAt(0).toUpperCase() +
-                          activity.problem.difficulty.slice(1)}
-                      </Badge>
-                    </Link>
+                        <div className="flex items-center gap-3">
+                          {activity.status === "solved" ? (
+                            <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                          ) : (
+                            <Circle className="h-5 w-5 text-amber-500" />
+                          )}
+                          <div>
+                            <div className="font-medium text-sm text-slate-900 group-hover:text-indigo-600 transition-colors">
+                              {activity.problem.title}
+                            </div>
+                            <div className="text-xs text-muted-foreground">{activity.date}</div>
+                          </div>
+                        </div>
+                        <Badge
+                          variant="secondary"
+                          className={`text-xs font-medium ${
+                            activity.problem.difficulty === "easy"
+                              ? "bg-emerald-100 text-emerald-700 border-emerald-200"
+                              : activity.problem.difficulty === "medium"
+                              ? "bg-amber-100 text-amber-700 border-amber-200"
+                              : "bg-red-100 text-red-700 border-red-200"
+                          }`}
+                        >
+                          {activity.problem.difficulty.charAt(0).toUpperCase() +
+                            activity.problem.difficulty.slice(1)}
+                        </Badge>
+                      </Link>
+                    </motion.div>
                   ))}
                 </div>
               </CardContent>
@@ -384,49 +511,58 @@ export default function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.8 }}
+          transition={{ duration: 0.3, delay: 1 }}
           className="mt-6"
         >
-          <Card className="border-border/50">
-            <CardHeader>
+          <Card className="border border-slate-200/60 shadow-sm bg-white">
+            <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Bookmark className="h-5 w-5" />
+                <CardTitle className="text-lg flex items-center gap-2 font-semibold text-slate-900">
+                  <Bookmark className="h-5 w-5 text-indigo-600" />
                   Bookmarked Problems
                 </CardTitle>
-                <Button variant="ghost" size="sm" className="text-xs">
+                <Button variant="ghost" size="sm" className="text-xs hover:text-indigo-600">
                   View All
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-3">
-                {bookmarkedProblems.map((problem) => (
-                  <Link key={problem.id} href={`/problems/${problem.slug}`}>
-                    <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-sm font-medium">
-                          {problem.id}
+              <div className="grid gap-2">
+                {bookmarkedProblems.map((problem, index) => (
+                  <motion.div
+                    key={problem.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.1 + index * 0.05 }}
+                  >
+                    <Link href={`/problems/${problem.slug}`}>
+                      <div className="flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-all duration-150 group">
+                        <div className="flex items-center gap-4">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-50 text-sm font-semibold text-indigo-700">
+                            {problem.id}
+                          </div>
+                          <span className="font-medium text-sm text-slate-900 group-hover:text-indigo-600 transition-colors">
+                            {problem.title}
+                          </span>
                         </div>
-                        <span className="font-medium text-sm">{problem.title}</span>
+                        <div className="flex items-center gap-3">
+                          <Badge
+                            variant="secondary"
+                            className={`text-xs font-medium ${
+                              problem.difficulty === "easy"
+                                ? "bg-emerald-100 text-emerald-700 border-emerald-200"
+                                : problem.difficulty === "medium"
+                                ? "bg-amber-100 text-amber-700 border-amber-200"
+                                : "bg-red-100 text-red-700 border-red-200"
+                            }`}
+                          >
+                            {problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)}
+                          </Badge>
+                          <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge
-                          variant="secondary"
-                          className={`text-xs ${
-                            problem.difficulty === "easy"
-                              ? "bg-difficulty-easy text-green-600 dark:text-green-400"
-                              : problem.difficulty === "medium"
-                              ? "bg-difficulty-medium text-amber-600 dark:text-amber-400"
-                              : "bg-difficulty-hard text-red-600 dark:text-red-400"
-                          }`}
-                        >
-                          {problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)}
-                        </Badge>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                      </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
             </CardContent>
