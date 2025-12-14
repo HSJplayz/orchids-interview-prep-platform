@@ -7,5 +7,15 @@ export function ThemeProvider({
   children,
   ...props
 }: React.ComponentProps<typeof NextThemesProvider>) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return (
+    <NextThemesProvider 
+      {...props} 
+      attribute="class"
+      defaultTheme="light"
+      enableSystem={false}
+      storageKey="codeprep-theme"
+    >
+      {children}
+    </NextThemesProvider>
+  );
 }
