@@ -10,28 +10,26 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { AmbientBackground } from "@/components/ambient-background";
-import { LoginCharacter } from "@/components/login-character";
+import { CharacterGroup } from "@/components/character-group";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [characterState, setCharacterState] = useState<"idle" | "typing" | "hiding" | "torch" | "success" | "error">("idle");
+  const [characterState, setCharacterState] = useState<"idle" | "typing" | "success" | "error">("idle");
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    if (showPassword) {
-      setCharacterState("torch");
-    } else if (hasError) {
+    if (hasError) {
       setCharacterState("error");
     } else if (password.length > 0 || email.length > 0) {
       setCharacterState("typing");
     } else {
       setCharacterState("idle");
     }
-  }, [showPassword, password, email, hasError]);
+  }, [password, email, hasError]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,30 +53,8 @@ export default function LoginPage() {
       
       <motion.div
         className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary/20 via-background to-accent/20 relative overflow-hidden items-center justify-center"
-        animate={{
-          backgroundColor: showPassword
-            ? "rgba(15, 23, 42, 0.95)"
-            : "rgba(248, 250, 252, 0.5)",
-        }}
-        transition={{ duration: 0.5 }}
       >
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM2MzY2ZjEiIGZpbGwtb3BhY2l0eT0iMC4wNCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40" />
-        
-        <AnimatePresence>
-          {showPassword && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.9 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="absolute inset-0 bg-gradient-radial from-transparent via-slate-900/50 to-slate-900"
-              style={{
-                background:
-                  "radial-gradient(circle at center, transparent 20%, rgba(15, 23, 42, 0.9) 60%)",
-              }}
-            />
-          )}
-        </AnimatePresence>
 
         <div className="relative z-10 flex flex-col justify-center px-16">
           <motion.div
@@ -96,27 +72,15 @@ export default function LoginPage() {
             </Link>
 
             <div className="flex flex-col items-center mb-8">
-              <LoginCharacter state={characterState} />
+              <CharacterGroup showPassword={showPassword} state={characterState} />
             </div>
 
-            <motion.h1
-              className="text-4xl font-bold mb-4"
-              animate={{
-                color: showPassword ? "#F1F5F9" : "#0F172A",
-              }}
-              transition={{ duration: 0.3 }}
-            >
+            <motion.h1 className="text-4xl font-bold mb-4">
               Level up your
               <br />
               <span className="gradient-text">coding skills</span>
             </motion.h1>
-            <motion.p
-              className="text-lg max-w-md"
-              animate={{
-                color: showPassword ? "#CBD5E1" : "#64748B",
-              }}
-              transition={{ duration: 0.3 }}
-            >
+            <motion.p className="text-lg text-muted-foreground max-w-md">
               Practice data structures and algorithms with our curated collection of interview
               questions from top tech companies.
             </motion.p>
@@ -146,13 +110,7 @@ export default function LoginPage() {
                         />
                       </svg>
                     </div>
-                    <motion.span
-                      animate={{
-                        color: showPassword ? "#F1F5F9" : "#0F172A",
-                      }}
-                    >
-                      {text}
-                    </motion.span>
+                    <span>{text}</span>
                   </motion.div>
                 )
               )}
