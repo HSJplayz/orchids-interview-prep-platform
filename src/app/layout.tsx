@@ -6,6 +6,7 @@ import Script from "next/script";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/sonner";
+import { CursorPet } from "@/components/cursor-pet";
 
 export const metadata: Metadata = {
   title: "CodePrep - Master Data Structures & Interview Questions",
@@ -45,6 +46,7 @@ export default function RootLayout({
           />
           <Navbar />
           <main className="pt-16">{children}</main>
+          <CursorPet />
           <Toaster />
           <VisualEditsMessenger />
         </ThemeProvider>
