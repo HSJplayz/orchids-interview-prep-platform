@@ -81,7 +81,7 @@ export interface User {
 
 export interface Submission {
   id: string;
-  odId: string;
+  userId: string;
   problemId: string;
   language: Language;
   code: string;
@@ -92,7 +92,7 @@ export interface Submission {
 }
 
 export interface UserProgress {
-  odId: string;
+  id: string;
   odId: string;
   problemId: string;
   status: ProblemStatus;
