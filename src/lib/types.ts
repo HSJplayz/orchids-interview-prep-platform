@@ -93,7 +93,7 @@ export interface Submission {
 
 export interface UserProgress {
   id: string;
-  odId: string;
+  userId: string;
   problemId: string;
   status: ProblemStatus;
   bookmarked: boolean;
