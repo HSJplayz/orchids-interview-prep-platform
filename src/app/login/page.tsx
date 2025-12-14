@@ -1,0 +1,229 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Eye, EyeOff, Mail, Lock, Zap, Github, Chrome } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+
+export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
+
+  return (
+    <div className="min-h-screen flex">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary/20 via-background to-accent/20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM2MzY2ZjEiIGZpbGwtb3BhY2l0eT0iMC4wNCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40" />
+        <div className="relative z-10 flex flex-col justify-center px-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Link href="/" className="flex items-center gap-2.5 mb-12">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent">
+                <Zap className="h-7 w-7 text-white" />
+              </div>
+              <span className="text-2xl font-bold tracking-tight">
+                Code<span className="text-primary">Prep</span>
+              </span>
+            </Link>
+
+            <h1 className="text-4xl font-bold mb-4">
+              Level up your
+              <br />
+              <span className="gradient-text">coding skills</span>
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-md">
+              Practice data structures and algorithms with our curated collection of interview
+              questions from top tech companies.
+            </p>
+
+            <div className="mt-12 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <svg
+                    className="h-5 w-5 text-green-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span>500+ curated problems</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <svg
+                    className="h-5 w-5 text-green-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span>Company-specific preparation</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <svg
+                    className="h-5 w-5 text-green-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span>Track your progress</span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md"
+        >
+          <div className="lg:hidden mb-8 flex justify-center">
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent">
+                <Zap className="h-6 w-6 text-white" />
+              </div>
+              <span className="text-xl font-bold tracking-tight">
+                Code<span className="text-primary">Prep</span>
+              </span>
+            </Link>
+          </div>
+
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold mb-2">Welcome back</h2>
+            <p className="text-muted-foreground">Sign in to continue your practice</p>
+          </div>
+
+          <div className="space-y-4 mb-6">
+            <Button variant="outline" className="w-full gap-2" size="lg">
+              <Chrome className="h-5 w-5" />
+              Continue with Google
+            </Button>
+            <Button variant="outline" className="w-full gap-2" size="lg">
+              <Github className="h-5 w-5" />
+              Continue with GitHub
+            </Button>
+          </div>
+
+          <div className="relative mb-6">
+            <Separator />
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
+              or continue with email
+            </span>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-primary hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pl-10 pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="remember"
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+              />
+              <Label htmlFor="remember" className="text-sm font-normal">
+                Remember me for 30 days
+              </Label>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90"
+              size="lg"
+            >
+              Sign In
+            </Button>
+          </form>
+
+          <p className="mt-6 text-center text-sm text-muted-foreground">
+            Don&apos;t have an account?{" "}
+            <Link href="/signup" className="text-primary hover:underline font-medium">
+              Sign up free
+            </Link>
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
