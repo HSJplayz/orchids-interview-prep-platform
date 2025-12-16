@@ -12,10 +12,22 @@ interface Particle {
   delay: number;
 }
 
+interface Leaf {
+  id: number;
+  x: number;
+  duration: number;
+  delay: number;
+  xOffset: number;
+}
+
 export function AmbientBackground({ paused = false }: { paused?: boolean }) {
+  const [isMounted, setIsMounted] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
+  const [leaves, setLeaves] = useState<Leaf[]>([]);
 
   useEffect(() => {
+    setIsMounted(true);
+    
     const newParticles: Particle[] = Array.from({ length: 20 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
@@ -25,7 +37,22 @@ export function AmbientBackground({ paused = false }: { paused?: boolean }) {
       delay: Math.random() * 5,
     }));
     setParticles(newParticles);
+
+    const newLeaves: Leaf[] = Array.from({ length: 8 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      duration: Math.random() * 8 + 12,
+      delay: Math.random() * 10,
+      xOffset: Math.random() * 100 - 50,
+    }));
+    setLeaves(newLeaves);
   }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" />
+    );
+  }
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -44,7 +71,7 @@ export function AmbientBackground({ paused = false }: { paused?: boolean }) {
               ? {}
               : {
                   y: [0, -30, 0],
-                  x: [0, Math.random() * 20 - 10, 0],
+                  x: [0, (particle.x % 20) - 10, 0],
                   opacity: [0.1, 0.3, 0.1],
                 }
           }
@@ -57,12 +84,12 @@ export function AmbientBackground({ paused = false }: { paused?: boolean }) {
         />
       ))}
       
-      {Array.from({ length: 8 }).map((_, i) => (
+      {leaves.map((leaf) => (
         <motion.div
-          key={`leaf-${i}`}
+          key={`leaf-${leaf.id}`}
           className="absolute"
           style={{
-            left: `${Math.random() * 100}%`,
+            left: `${leaf.x}%`,
             top: -20,
           }}
           animate={
@@ -70,14 +97,14 @@ export function AmbientBackground({ paused = false }: { paused?: boolean }) {
               ? {}
               : {
                   y: ["0vh", "110vh"],
-                  x: [0, Math.random() * 100 - 50],
+                  x: [0, leaf.xOffset],
                   rotate: [0, 360],
                   opacity: [0, 0.15, 0.15, 0],
                 }
           }
           transition={{
-            duration: Math.random() * 8 + 12,
-            delay: Math.random() * 10,
+            duration: leaf.duration,
+            delay: leaf.delay,
             repeat: Infinity,
             ease: "linear",
           }}
