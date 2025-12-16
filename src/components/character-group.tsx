@@ -59,14 +59,6 @@ export function CharacterGroup({ showPassword, state }: CharacterGroupProps) {
     },
   ];
 
-  if (!isMounted) {
-    return (
-      <div className="relative w-full h-64 flex items-center justify-center">
-        <div className="w-full h-full max-w-md" />
-      </div>
-    );
-  }
-
   return (
     <div className="relative w-full h-64 flex items-center justify-center">
       <svg
