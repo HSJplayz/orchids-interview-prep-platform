@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface CharacterGroupProps {
@@ -7,8 +8,23 @@ interface CharacterGroupProps {
   state: "idle" | "typing" | "success" | "error";
 }
 
+interface Character {
+  id: number;
+  x: number;
+  emoji: string;
+  hideEmoji: string;
+  color: string;
+  action: string;
+}
+
 export function CharacterGroup({ showPassword, state }: CharacterGroupProps) {
-  const characters = [
+  const [isMounted, setIsMounted] = useState(false);
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const characters: Character[] = [
     {
       id: 1,
       x: 0,
@@ -42,6 +58,14 @@ export function CharacterGroup({ showPassword, state }: CharacterGroupProps) {
       action: "cool",
     },
   ];
+
+  if (!isMounted) {
+    return (
+      <div className="relative w-full h-64 flex items-center justify-center">
+        <div className="w-full h-full max-w-md" />
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full h-64 flex items-center justify-center">
