@@ -50,6 +50,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex relative overflow-hidden">
       <AmbientBackground paused={isInputFocused} />
+      <CursorPet />
       
       <motion.div
         className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary/20 via-background to-accent/20 relative overflow-hidden items-center justify-center"
